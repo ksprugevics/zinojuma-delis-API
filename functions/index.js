@@ -67,4 +67,28 @@ app.post('*/aktualitates', (request, response) =>
     })
 });
 
+app.get('*/aktualitates', (request, response) =>{
+    const postRef = db.collection('aktualitates');
+
+    // Saturēs visas aktualitātes
+    const aktualitates = [];
+
+    // Atgūstam visas aktualitātes
+    postRef.get()
+    .then((querySnapshot) =>{
+        // Iterējam cauri visām aktualitātēm
+        querySnapshot.forEach(function(doc) {
+            // Tukšajā masīvā ievietojam iegūtu informāciju
+            aktualitates.push({
+                id: doc.id,
+                datat: doc.data()
+            });
+        });
+        // Iegūto informāciju atgriežam kā response
+        response.send({aktualitates});
+    })
+    .catch((error) => {
+        response.status(500).json({error: "Aktualitātes not found"});
+    });
+});
 
