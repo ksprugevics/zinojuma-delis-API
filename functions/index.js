@@ -1,5 +1,6 @@
 const functions = require('firebase-functions');
 const express = require("express");
+const cors = require('cors');
 
 // Iegūstam admin tiesības datubāzei
 var admin = require("firebase-admin");
@@ -13,6 +14,9 @@ admin.initializeApp({
 //express instances
 const main = express();
 const app = express();
+
+app.use(cors());
+
 
 // Definē base url visiem requestiem.
 main.use("/api", app);
