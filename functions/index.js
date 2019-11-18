@@ -60,7 +60,7 @@ app.post('*/aktualitates', (request, response) =>
     .then(postDoc =>
     {
         const data = postDoc.data();
-        const {nosaukus, apraksts, autors} = data;
+        const {nosaukums, apraksts, autors} = data;
 
         response.status(201).json({
             id: postDoc. id,
