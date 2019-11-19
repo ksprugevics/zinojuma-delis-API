@@ -2,6 +2,9 @@ const functions = require('firebase-functions');
 const express = require("express");
 const cors = require('cors');
 
+//Lai palaistu serveri:
+//firebase serve --only functions,hosting
+
 // Iegūstam admin tiesības datubāzei
 var admin = require("firebase-admin");
 var serviceAccount = require("./service_key.json");
@@ -71,7 +74,8 @@ app.post('*/aktualitates', (request, response) =>
     })
 });
 
-app.get('*/aktualitates', (request, response) =>{
+app.get('*/aktualitates', (request, response) =>
+{
     const postRef = db.collection('aktualitates');
 
     // Saturēs visas aktualitātes
@@ -96,3 +100,42 @@ app.get('*/aktualitates', (request, response) =>{
     });
 });
 
+
+app.delete('*/aktualitates/:id', (request, response) =>
+{
+    const id =  request.params.id;
+    const postRef = db.collection('aktualitates').doc(id);
+    
+    //TODO: Parbaude vai id nav tukss un ir valid
+
+    postRef.delete()
+    .then(() =>
+    {
+        response.status(200).json({"success": "Aktualitāte izdzēsta veiksmīgi!"});
+    })
+    .catch((error) => 
+    {
+        response.status(500).json({"error": "Neizdevās izdzēst aktualitāti!"});
+    });
+});
+
+app.get('*/aktualitates/:id', (request, response) =>
+{
+    const id =  request.params.id;
+    const postRef = db.collection('aktualitates').doc(id);
+
+
+
+    postRef.get()
+    .then((doc) => {
+        if(doc.exists)
+        {
+            return response.status(200).json(doc.data());
+        } else {
+            return response.status(400).json({"message":"ID not found."});
+        }
+    })
+    .catch((error) => {
+        console.log("Error getting documents: ", error);
+    });
+});
