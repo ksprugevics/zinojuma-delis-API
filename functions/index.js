@@ -74,6 +74,7 @@ app.post('*/aktualitates', (request, response) =>
     })
 });
 
+// Lai atgūtu visas aktualitātes
 app.get('*/aktualitates', (request, response) =>
 {
     const postRef = db.collection('aktualitates');
@@ -101,6 +102,7 @@ app.get('*/aktualitates', (request, response) =>
 });
 
 
+// Lai izdzēstu aktualitāti ar konkrēto id
 app.delete('*/aktualitates/:id', (request, response) =>
 {
     const id =  request.params.id;
@@ -121,14 +123,15 @@ app.delete('*/aktualitates/:id', (request, response) =>
 
 
 
-
+// Lai atgrieztu aktualitāti ar konkrētu ID
 app.get('*/aktualitates/:id', (request, response) =>
 {
+    //Iegūstam id un attiecīgo dokumentu
     const id =  request.params.id;
     const postRef = db.collection('aktualitates').doc(id);
 
 
-
+    //Atrodam un atgriežam to
     postRef.get()
     .then((doc) => {
         if(doc.exists)
@@ -141,4 +144,35 @@ app.get('*/aktualitates/:id', (request, response) =>
     .catch((error) => {
         console.log("Error getting documents: ", error);
     });
+});
+
+// Lai labotu aktualitāti
+app.put('*/aktualitates/:id', async (request, response) => {
+    
+    //Iegūstam id un attiecīgo dokumentu
+    const id =  request.params.id;
+    const postRef = db.collection('aktualitates').doc(id);
+    
+    // Request body sastāvēs no šādām vērtībām (tādām pašām kā post)
+    const{nosaukums, apraksts, autors} = request.body;
+
+    const data =
+    {
+        datums: admin.firestore.FieldValue.serverTimestamp(),
+        nosaukums,
+        apraksts,
+        autors
+    } 
+
+    //Izmainām jau esošās vērtības ar merge
+    postRef.set(data,{merge:true})
+    .then(postRef =>
+    {
+        response.status(200).json({"success": "Aktualitāte izmainīta veiksmīgi!"});
+    })
+    .catch((error) =>
+    {
+        response.status(500).send(error);
+    });
+
 });
