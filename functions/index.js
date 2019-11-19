@@ -119,6 +119,9 @@ app.delete('*/aktualitates/:id', (request, response) =>
     });
 });
 
+
+
+
 app.get('*/aktualitates/:id', (request, response) =>
 {
     const id =  request.params.id;
