@@ -176,3 +176,143 @@ app.put('*/aktualitates/:id', async (request, response) => {
     });
 
 });
+
+//-----------------------------------
+//Paziņojumi API
+
+
+app.post('*/pazinojumi', (request, response) =>
+{
+    const postRef = db.collection('pazinojumi');
+
+    // Request body sastāvēs no šādām vērtībām
+    const{nosaukums, apraksts} = request.body;
+
+    // Dati, kas tiks saglabāti pie katras aktualitātes
+    const data =
+    {
+        datums: admin.firestore.FieldValue.serverTimestamp(),
+        nosaukums,
+        apraksts
+    } 
+
+    // Pievienojam datubāzei post requesta body
+    postRef.add(data)
+    .then(postRef =>
+    {
+        return postRef.get();
+    })
+    .then(postDoc =>
+    {
+        const data = postDoc.data();
+        const {nosaukums, apraksts} = data;
+
+        response.status(201).json({
+            id: postDoc. id,
+            nosaukums,
+            apraksts
+        })
+    })
+});
+
+// Lai atgūtu visus paziņojumu
+app.get('*/pazinojumi', (request, response) =>
+{
+    const postRef = db.collection('pazinojumi');
+
+    // Saturēs visas paziņojumus
+    const pazinojumi = [];
+
+    // Atgūstam visas paziņojumus
+    postRef.get()
+    .then((querySnapshot) =>{
+        // Iterējam cauri visām aktualitātēm
+        querySnapshot.forEach(function(doc) {
+            // Tukšajā masīvā ievietojam iegūtu informāciju
+            pazinojumi.push({
+                id: doc.id,
+                datat: doc.data()
+            });
+        });
+        // Iegūto informāciju atgriežam kā response
+        response.send({pazinojumi});
+    })
+    .catch((error) => {
+        response.status(500).json({error: "Paziņojumi not found"});
+    });
+});
+
+
+// Lai izdzēstu aktualitāti ar konkrēto id
+app.delete('*/pazinojumi/:id', (request, response) =>
+{
+    const id =  request.params.id;
+    const postRef = db.collection('pazinojumi').doc(id);
+    
+    //TODO: Parbaude vai id nav tukss un ir valid
+
+    postRef.delete()
+    .then(() =>
+    {
+        response.status(200).json({"success": "Paziņojums izdzēsts veiksmīgi!"});
+    })
+    .catch((error) => 
+    {
+        response.status(500).json({"error": "Neizdevās izdzēst paziņojumu!"});
+    });
+});
+
+
+
+// Lai atgrieztu aktualitāti ar konkrētu ID
+app.get('*/pazinojumi/:id', (request, response) =>
+{
+    //Iegūstam id un attiecīgo dokumentu
+    const id =  request.params.id;
+    const postRef = db.collection('pazinojumi').doc(id);
+
+
+    //Atrodam un atgriežam to
+    postRef.get()
+    .then((doc) => {
+        if(doc.exists)
+        {
+            return response.status(200).json(doc.data());
+        } else {
+            return response.status(400).json({"message":"ID not found."});
+        }
+    })
+    .catch((error) => {
+        console.log("Error getting documents: ", error);
+    });
+});
+
+// Lai labotu aktualitāti
+app.put('*/pazinojumi/:id', async (request, response) => {
+    
+    //Iegūstam id un attiecīgo dokumentu
+    const id =  request.params.id;
+    const postRef = db.collection('pazinojumi').doc(id);
+    
+    // Request body sastāvēs no šādām vērtībām (tādām pašām kā post)
+    const{nosaukums, apraksts} = request.body;
+
+    const data =
+    {
+        datums: admin.firestore.FieldValue.serverTimestamp(),
+        nosaukums,
+        apraksts,
+    } 
+
+    //Izmainām jau esošās vērtības ar merge
+    postRef.set(data,{merge:true})
+    .then(postRef =>
+    {
+        response.status(200).json({"success": "Paziņojums izmainīts veiksmīgi!"});
+    })
+    .catch((error) =>
+    {
+        response.status(500).send(error);
+    });
+
+});
