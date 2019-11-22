@@ -144,11 +144,11 @@ const AktualitatesUpdate = app.put('*/aktualitates/:id', async (request, respons
         autors
     } 
 
-    //Izmainām jau esošās vērtības ar merge
+    //Izmainām jau esošās vērtības ar merge.
     postRef.set(data,{merge:true})
     .then((doc) =>
     {
-        response.status(200).json({"success": "Aktualitāte izmainīta veiksmīgi!"});
+        response.status(200).json({"success": "Aktualitāte updated successfully."});
     })
     .catch((error) =>
     {

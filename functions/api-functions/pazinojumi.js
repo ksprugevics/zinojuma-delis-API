@@ -95,7 +95,7 @@ const PazinojumiDelete = app.delete('*/pazinojumi/:id', (request, response) =>
     const id =  request.params.id;
     const postRef = db.collection('pazinojumi').doc(id);
     
-    // Sākumā pārbauda vai aktualitāte ar šādu ID eksistē.
+    // Sākumā pārbauda vai paziņojums ar šādu ID eksistē.
     postRef.get()
     .then((doc) => {
         if(!doc.exists)
@@ -108,11 +108,11 @@ const PazinojumiDelete = app.delete('*/pazinojumi/:id', (request, response) =>
     postRef.delete()
     .then(() =>
     {
-        response.status(200).json({"success": "Paziņojums izdzēsts veiksmīgi!"});
+        response.status(200).json({"success": "Paziņojums deleted successfully."});
     })
     .catch((error) => 
     {
-        response.status(500).json({"error": "Neizdevās izdzēst paziņojumu!"});
+        response.status(500).json({"error": "Failed to delete paziņojums."});
     });
 });
 
@@ -146,11 +146,11 @@ const PazinojumiUpdate = app.put('*/pazinojumi/:id', async (request, response) =
     postRef.set(data,{merge:true})
     .then(postRef =>
     {
-        response.status(200).json({"success": "Paziņojums izmainīts veiksmīgi!"});
+        response.status(200).json({"success": "Paziņojums updated successfully."});
     })
     .catch((error) =>
     {
-        response.status(500).send(error);
+        response.status(500).json({"error": "Failed to delete paziņojums!"});
     });
 
 });
@@ -161,5 +161,4 @@ module.exports = {
     PazinojumiPost,
     PazinojumiDelete,
     PazinojumiUpdate
-
 }
