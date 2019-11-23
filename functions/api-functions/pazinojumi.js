@@ -62,7 +62,7 @@ const PazinojumiPost = app.post('*/pazinojumi', (request, response) =>
 
     const data =
     {
-        datums: admin.firestore.FieldValue.serverTimestamp(),
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
         nosaukums,
         apraksts
     } 
@@ -137,7 +137,7 @@ const PazinojumiUpdate = app.put('*/pazinojumi/:id', async (request, response) =
 
     const data =
     {
-        datums: admin.firestore.FieldValue.serverTimestamp(),
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
         nosaukums,
         apraksts,
     } 

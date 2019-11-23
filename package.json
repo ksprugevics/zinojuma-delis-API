@@ -1,11 +1,15 @@
 {
   "name": "zinojumu_delis_api",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.venta.lv/s7_spruge_k/tt2019_kursadarbs_zinojuma_delis_api.git"
+  },
+  "description": ""
 }
