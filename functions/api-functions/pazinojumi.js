@@ -23,6 +23,9 @@ const PazinojumiGet = app.get('*/pazinojumi', (request, response) =>
             });
         });
 
+        // Sakārto iegūto informāciju dilstošā secībā (Jaunākie posti no sākuma).
+        pazinojumi.sort((a, b) => (b.datat.timestamp._seconds) - (a.datat.timestamp._seconds));
+
         // Iegūto informāciju atgriežam kā response
         response.send({pazinojumi});
     })

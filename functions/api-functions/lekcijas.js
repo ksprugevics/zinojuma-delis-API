@@ -22,6 +22,10 @@ const LekcijasGet = app.get('*/lekcijas', (request, response) =>
                 datat: doc.data()
             });
         });
+        
+        // Sakārto iegūto informāciju dilstošā secībā (Jaunākie posti no sākuma).
+        lekcijas.sort((a, b) => (b.datat.timestamp._seconds) - (a.datat.timestamp._seconds));
+
         // Iegūto informāciju atgriežam kā response.
         response.send({lekcijas});
     })
