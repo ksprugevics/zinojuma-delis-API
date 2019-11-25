@@ -33,6 +33,7 @@ Instalēt bibliotēkas: `install dependencies`
     "functions": "api"
 }
 ]`
+
 6) Lai palaistu:
 
 `cd functions`
